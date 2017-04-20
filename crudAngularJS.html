@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="app">
+<head>
+    <meta charset="utf-8" http-equiv="X-UA-Compatible" content="IE=11" />
+    <title>AngularJs-CrudOperations</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+    <script>
+        var app = angular.module('app', []);
+
+        //controller file
+        app.controller('my_controller', function ($scope) {
+            var empId = 2;
+            $scope.allEmployes=[{id:1,fname:"Emp1",lname:"Emp1",department:"IT",role:"Developer"}]
+            $scope.saveEmployee = function () {
+                //console.log($scope.newEmployee);
+                if ($scope.newEmployee.id == null) {
+                    $scope.newEmployee.id = empId++;
+                    //console.log($scope.newEmployee.id);
+                    $scope.allEmployes.push($scope.newEmployee);
+                    $scope.newEmployee = {};
+                } else {
+                    for (i in $scope.allEmployes) {
+                        if ($scope.allEmployes[i].id == $scope.newEmployee.id) {
+                            $scope.allEmployes[i] = $scope.newEmployee;
+                        }
+                    }
+                }
+            };
+
+            //Edit Operation
+            $scope.edit = function (id) {
+                //console.log(id);
+                for (i in $scope.allEmployes) {
+                    if ($scope.allEmployes[i].id==id) {
+                        $scope.newEmployee = angular.copy($scope.allEmployes[i]);
+                    }
+                }
+            };
+
+            //Delete Operation
+            $scope.delete = function (id) {
+                //console.log(id);
+                for (i in $scope.allEmployes) {
+                    if($scope.allEmployes[i].id==id){
+                        $scope.allEmployes.splice(i, 1);
+                        $scope.newEmployee = {};
+                    }
+                }
+            };
+        })
+        jQuery(document).ready(function () {
+            
+        });
+    </script>
+</head>
+<body ng-controller="my_controller">
+    <div class="container">
+       <div class="row">
+           <div class="col-md-4 col-md-offset-4">
+               <form name="employeeForm">
+                   <div class="form-group text-center">
+                       <h2>Employee-Form</h2>
+                   </div>
+                   <div class="form-group">
+                       <input type="text" placeholder="Enter FirstName" class="form-control" ng-model="newEmployee.fname" required />
+                   </div>
+                   <div class="form-group">
+                       <input type="text" placeholder="Enter LastName" class="form-control" ng-model="newEmployee.lname" required />
+                   </div>
+                   <div class="form-group">
+                       <input type="text" placeholder="Enter Department" class="form-control" ng-model="newEmployee.department" required />
+                   </div>
+                   <div class="form-group">
+                       <input type="text" placeholder="Enter Role" class="form-control" ng-model="newEmployee.role" required />
+                   </div>
+                   <div class="form-group">
+                       <input type="hidden" class="form-control" ng-model="newEmployee.id" />
+                   </div>
+                   <div class="form-group">
+                       <input type="button" class="btn btn-success btn-block" value="Save" ng-click="saveEmployee()" ng-disabled="employeeForm.$invalid" id="saveButton" />
+                       <input type="reset" class="btn btn-primary btn-block" value="Cancel" ng-click="resetButton()" id="resetButton" />
+                   </div>
+               </form>
+           </div>
+       </div>
+        <div class="table-responsive">
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>FirstName</th>
+                        <th>LastName</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="employee in allEmployes">
+                        <td>{{employee.id}}</td>
+                        <td>{{employee.fname}}</td>
+                        <td>{{employee.lname}}</td>
+                        <td>{{employee.department}}</td>
+                        <td>{{employee.role}}</td>
+                        <td>
+                            <input type="button" class="btn btn-success btn-xs" ng-click="edit(employee.id)" value="Edit" />
+                            <input type="button" class="btn btn-primary btn-xs" ng-click="delete(employee.id)" value="Delete" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+   
+</body>
+</html>
